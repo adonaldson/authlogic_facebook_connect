@@ -38,6 +38,17 @@ module AuthlogicFacebookConnect
       end
       alias_method :facebook_uid_field=, :facebook_uid_field
 
+      # What user field should be used for the facebook email hash?
+      #
+      # If this field is set and the column exists, fall back to find the user by email_hash
+      #
+      # * <tt>Default:</tt> nil
+      # * <tt>Accepts:</tt> Symbol
+      def facebook_email_hash_field(value = nil)
+        rw_config(:facebook_email_hash_field, value, nil)
+      end
+      alias_method :facebook_email_hash_field=, :facebook_email_hash_field
+
       # What session key field should be used for the facebook session key
       #
       #
@@ -76,8 +87,12 @@ module AuthlogicFacebookConnect
 
       def validate_by_facebook_connect
         facebook_session = controller.facebook_session
-        self.attempted_record = klass.find(:first, :conditions => { facebook_uid_field => facebook_session.user.uid })
+        self.attempted_record = klass.send(:"find_by_#{facebook_uid_field}", facebook_session.user.uid)
 
+        if self.attempted_record.nil? && facebook_email_hash_field
+          self.attempted_record = klass.send(:"find_by_#{facebook_email_hash_field}", facebook_session.user.email_hashes)
+        end
+        
         if self.attempted_record
           self.attempted_record.send(:"#{facebook_session_key_field}=", facebook_session.session_key)
           self.attempted_record.save
@@ -123,8 +138,13 @@ module AuthlogicFacebookConnect
       end
 
       private
+      
       def facebook_valid_user
         self.class.facebook_valid_user
+      end
+
+      def facebook_email_hash_field
+        self.class.facebook_email_hash_field
       end
 
       def facebook_uid_field
