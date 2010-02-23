@@ -45,7 +45,7 @@ module AuthlogicFacebookConnect
       # * <tt>Default:</tt> nil
       # * <tt>Accepts:</tt> Symbol
       def facebook_email_hash_field(value = nil)
-        rw_config(:facebook_email_hash_field, value, nil)
+        rw_config(:facebook_email_hash_field, value, :email_hash)
       end
       alias_method :facebook_email_hash_field=, :facebook_email_hash_field
 
