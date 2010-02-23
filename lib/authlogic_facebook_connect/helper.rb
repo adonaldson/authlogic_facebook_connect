@@ -34,7 +34,7 @@ module AuthlogicFacebookConnect
     
     
     def authlogic_facebook_logout_link(text, options = {})
-      # TODO: Make this with correct helpers istead of this uggly hack.
+      # TODO: Make this with correct helpers istead of this ugly hack.
 
       options[:controller] ||= "user_session"
       options[:js] ||= :prototype
