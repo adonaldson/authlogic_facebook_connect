@@ -95,6 +95,7 @@ module AuthlogicFacebookConnect
         
         if self.attempted_record
           self.attempted_record.send(:"#{facebook_session_key_field}=", facebook_session.session_key)
+          self.attempted_record.send(:"#{facebook_uid_field}=", facebook_session.user.uid)
           self.attempted_record.save
         end
 
