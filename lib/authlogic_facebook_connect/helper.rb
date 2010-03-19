@@ -20,6 +20,7 @@ module AuthlogicFacebookConnect
         url = "/#{options[:controller]}"
         options.delete(:controller)
       end
+      onlogin = options[:onlogin] || "connect_to_facebook()"
       output = "<form id='connect_to_facebook_form' method='post' action='#{url}'>\n"
       output << token_tag
       output << "</form>\n"
@@ -28,7 +29,7 @@ module AuthlogicFacebookConnect
       output << "   #{js_selector}.submit();\n"
       output << " }\n"
       output << "</script>\n"
-      output << fb_login_button("connect_to_facebook()", options)
+      output << fb_login_button(onlogin, options)
       output
     end
     
